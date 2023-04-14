@@ -20,7 +20,7 @@ By using this structure, teams can keep things in the right place, making it eas
     └── submodules
 ```
 
-We encourage contributions and suggestions to help improve the structure and contents of this repository. Whether you are a seasoned infrastructure DevOps or a newcomer to the field, we hope this repository will provide a useful starting point for your projects.
+We encourage contributions and suggestions to help improve the structure and contents of this repository. Whether you are a experienced infrastructure DevOps or a new joiner to the field, we hope this repository will provide a useful starting point for your projects.
 
 ## Infrastructure directories
 
@@ -44,7 +44,7 @@ Each subdirectory within `helm/releases` should contain a `values.yaml` file tha
 
 ### `/kubernetes/kustomize`
 
-The `kubernetes/kustomize` directory contains `kustomization.yaml` files and Kubernetes manifests. [Kustomize](https://kubectl.docs.kubernetes.io/references/kustomize/) is a customization engine that allows you to customize your Kubernetes resources across multiple environments and clusters.
+The `kubernetes/kustomize` directory contains `kustomization.yaml` files and Kubernetes manifests. [Kustomize](https://kubectl.docs.kubernetes.io/references/kustomize/) is a customization engine that allows you to adapt your Kubernetes resources across multiple environments and clusters.
 
 ### `/kubernetes/manifests`
 
@@ -74,8 +74,6 @@ The `docs` directory is intended to contain documentation and other resources th
 - images,
 - diagrams,
 - architecture decision records (ADRs).
-
-Keep in mind that `README.md` files in another directories can be also very useful to understand each component.
 
 ### `/scripts`
 

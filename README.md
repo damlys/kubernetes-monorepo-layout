@@ -17,7 +17,7 @@ By using this structure, teams can keep things in the right place, making it eas
 │   └── packages
 ├── kubernetes
 │   ├── kustomize
-│   └── manifests
+│   └── raw
 └── terraform
     ├── modules
     └── submodules
@@ -57,9 +57,9 @@ This directory contains [kpt](https://kpt.dev/) "abstract packages" that are reu
 
 The `kubernetes/kustomize` directory contains `kustomization.yaml` files and Kubernetes manifests. [Kustomize](https://kubectl.docs.kubernetes.io/references/kustomize/) is a customization engine that allows you to adapt your Kubernetes resources across multiple environments and clusters.
 
-### `/kubernetes/manifests`
+### `/kubernetes/raw`
 
-The `kubernetes/manifests` directory contains raw Kubernetes `.yaml` files that define the desired state of your Kubernetes resources. These files can be used to deploy your Kubernetes applications directly, without using any additional template or customization tools.
+The `kubernetes/raw` directory contains raw Kubernetes `.yaml` files that define the desired state of your Kubernetes resources. These files can be used to deploy your Kubernetes applications directly, without using any additional template or customization tools.
 
 ### `/terraform/modules`
 

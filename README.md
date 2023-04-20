@@ -2,7 +2,7 @@
 
 This repository is designed to provide a simple structure for Kubernetes projects, enabling teams to keep everything that is needed for "infrastructure as code" together in a single place. By providing a single entry point for new team members, this repository can help teams become more productive and efficient in their work.
 
-The Kubernetes Monorepo Layout project aims to create only a structure of directories and files. This structure includes Helm charts and releases, Kustomize manifests, raw Kubernetes manifests, Terraform root modules and submodules (aka. child modules), Docker images, and more.
+The Kubernetes Monorepo Layout project aims to create only a structure of directories and files. This structure includes Helm charts and releases, Kpt packages, Kustomize manifests, raw Kubernetes manifests, Terraform root modules and submodules (aka. child modules), Docker images, and more.
 
 By using this structure, teams can keep things in the right place, making it easier to find and manage infrastructure-related files. This can help improve collaboration and ensure that everyone is on the same page when it comes to infrastructure development and deployment.
 
@@ -12,6 +12,9 @@ By using this structure, teams can keep things in the right place, making it eas
 ├── helm
 │   ├── charts
 │   └── releases
+├── kpt
+│   ├── instances
+│   └── packages
 ├── kubernetes
 │   ├── kustomize
 │   └── manifests
@@ -41,6 +44,14 @@ This directory is intended to contain the [Helm charts](https://helm.sh/docs/top
 The `helm/releases` directory is where you store the configuration values required to install instances of Helm charts in your Kubernetes clusters.
 
 Each subdirectory within `helm/releases` should contain a `values.yaml` file that defines the values needed to configure a specific instance of the chart in a specific environment.
+
+### `/kpt/instances`
+
+This directory contains "deployable instances", also known as "variants". Each instance represents a unique configuration of your software that can be deployed to a given environment such as test, staging or production.
+
+### `/kpt/packages`
+
+This directory contains [kpt](https://kpt.dev/) "abstract packages" that are reusable. These packages can be used in different environments and provide a common set of functionality that can be shared across projects.
 
 ### `/kubernetes/kustomize`
 

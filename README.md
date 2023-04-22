@@ -86,6 +86,12 @@ The `docs` directory is intended to contain documentation and other resources th
 - diagrams,
 - architecture decision records (ADRs).
 
+### `/go`
+
+The `go` directory contains [Go](https://go.dev/) programs that can be used as an alternative to shell scripts, or when shell scripts are not sufficient.
+
+This directory should follow the structure specified in the [golang-standards/project-layout](https://github.com/golang-standards/project-layout) repository on GitHub.
+
 ### `/scripts`
 
 The `scripts` directory contains shell scripts that automate various procedures and tasks. These scripts can help to streamline workflows and simplify complex processes. They can be used to manage infrastructure resources, configure services, deploy applications, and perform other operations.

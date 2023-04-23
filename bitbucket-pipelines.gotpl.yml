@@ -1,0 +1,118 @@
+image: example:latest
+definitions:
+  caches:
+    {{- range .TerraformModules }}
+    terraform-module-{{.}}: terraform/modules/{{.}}/.terraform
+    {{- end }}
+  steps:
+    {{- range .DockerImages }}
+    - step: &docker-image-{{.}}-build
+        name: build docker/images/{{.}}
+        condition:
+          changesets:
+            includePaths:
+              - "docker/images/{{.}}/**"
+        script:
+          - ./scripts/docker-image-build.bash "{{.}}" "$BITBUCKET_COMMIT"
+    - step: &docker-image-{{.}}-test
+        name: test docker/images/{{.}}
+        condition:
+          changesets:
+            includePaths:
+              - "docker/images/{{.}}/**"
+        script:
+          - ./scripts/docker-image-test.bash "{{.}}" "$BITBUCKET_COMMIT"
+    - step: &docker-image-{{.}}-push
+        name: push docker/images/{{.}}
+        condition:
+          changesets:
+            includePaths:
+              - "docker/images/{{.}}/**"
+        script:
+          - ./scripts/docker-image-push.bash "{{.}}" "$BITBUCKET_COMMIT"
+    {{- end }}
+
+    - step: &terraform-fmt
+        name: terraform fmt
+        condition:
+          changesets:
+            includePaths:
+              - "terraform/**"
+        script:
+          - terraform fmt -check -recursive ./terraform
+
+    {{- range .TerraformModules }}
+    - step: &terraform-module-{{.}}-validate
+        name: validate terraform/modules/{{.}}
+        condition:
+          changesets:
+            includePaths:
+              - "terraform/modules/{{.}}/**"
+        caches:
+          - terraform-module-{{.}}
+        script:
+          - terraform -chdir=./terraform/modules/{{.}} init -input=false
+          - terraform -chdir=./terraform/modules/{{.}} validate
+    - step: &terraform-module-{{.}}-plan
+        name: plan terraform/modules/{{.}}
+        condition:
+          changesets:
+            includePaths:
+              - "terraform/modules/{{.}}/**"
+        caches:
+          - terraform-module-{{.}}
+        script:
+          - terraform -chdir=./terraform/modules/{{.}} init -input=false
+          - terraform -chdir=./terraform/modules/{{.}} plan -input=false
+    - step: &terraform-module-{{.}}-apply
+        name: apply terraform/modules/{{.}}
+        condition:
+          changesets:
+            includePaths:
+              - "terraform/modules/{{.}}/**"
+        trigger: manual
+        caches:
+          - terraform-module-{{.}}
+        script:
+          - terraform -chdir=./terraform/modules/{{.}} init -input=false
+          - terraform -chdir=./terraform/modules/{{.}} apply -input=false -auto-approve
+    {{- end }}
+
+pipelines:
+  pull-requests:
+    "**":
+      - parallel:
+          {{- range .DockerImages }}
+          - step: *docker-image-{{.}}-build
+          {{- end }}
+      - parallel:
+          {{- range .DockerImages }}
+          - step: *docker-image-{{.}}-test
+          {{- end }}
+      - parallel:
+          - step: *terraform-fmt
+          {{- range .TerraformModules }}
+          - step: *terraform-module-{{.}}-validate
+          {{- end }}
+      - parallel:
+          {{- range .TerraformModules }}
+          - step: *terraform-module-{{.}}-plan
+          {{- end }}
+  branches:
+    main:
+      - parallel:
+          {{- range .DockerImages }}
+          - step: *docker-image-{{.}}-build
+          {{- end }}
+      - parallel:
+          {{- range .DockerImages }}
+          - step: *docker-image-{{.}}-push
+          {{- end }}
+      - parallel:
+          {{- range .TerraformModules }}
+          - step: *terraform-module-{{.}}-plan
+          {{- end }}
+      - parallel:
+          {{- range .TerraformModules }}
+          - step: *terraform-module-{{.}}-apply
+          {{- end }}

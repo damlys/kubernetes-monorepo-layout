@@ -1,0 +1,307 @@
+image: example:latest
+definitions:
+  caches:
+    terraform-module-env0: terraform/modules/env0/.terraform
+    terraform-module-env1: terraform/modules/env1/.terraform
+    terraform-module-env2: terraform/modules/env2/.terraform
+    terraform-module-prod: terraform/modules/prod/.terraform
+    terraform-module-test: terraform/modules/test/.terraform
+  steps:
+    - step: &docker-image-app0-build
+        name: build docker/images/app0
+        condition:
+          changesets:
+            includePaths:
+              - "docker/images/app0/**"
+        script:
+          - ./scripts/docker-image-build.bash "app0" "$BITBUCKET_COMMIT"
+    - step: &docker-image-app0-test
+        name: test docker/images/app0
+        condition:
+          changesets:
+            includePaths:
+              - "docker/images/app0/**"
+        script:
+          - ./scripts/docker-image-test.bash "app0" "$BITBUCKET_COMMIT"
+    - step: &docker-image-app0-push
+        name: push docker/images/app0
+        condition:
+          changesets:
+            includePaths:
+              - "docker/images/app0/**"
+        script:
+          - ./scripts/docker-image-push.bash "app0" "$BITBUCKET_COMMIT"
+    - step: &docker-image-app1-build
+        name: build docker/images/app1
+        condition:
+          changesets:
+            includePaths:
+              - "docker/images/app1/**"
+        script:
+          - ./scripts/docker-image-build.bash "app1" "$BITBUCKET_COMMIT"
+    - step: &docker-image-app1-test
+        name: test docker/images/app1
+        condition:
+          changesets:
+            includePaths:
+              - "docker/images/app1/**"
+        script:
+          - ./scripts/docker-image-test.bash "app1" "$BITBUCKET_COMMIT"
+    - step: &docker-image-app1-push
+        name: push docker/images/app1
+        condition:
+          changesets:
+            includePaths:
+              - "docker/images/app1/**"
+        script:
+          - ./scripts/docker-image-push.bash "app1" "$BITBUCKET_COMMIT"
+    - step: &docker-image-app2-build
+        name: build docker/images/app2
+        condition:
+          changesets:
+            includePaths:
+              - "docker/images/app2/**"
+        script:
+          - ./scripts/docker-image-build.bash "app2" "$BITBUCKET_COMMIT"
+    - step: &docker-image-app2-test
+        name: test docker/images/app2
+        condition:
+          changesets:
+            includePaths:
+              - "docker/images/app2/**"
+        script:
+          - ./scripts/docker-image-test.bash "app2" "$BITBUCKET_COMMIT"
+    - step: &docker-image-app2-push
+        name: push docker/images/app2
+        condition:
+          changesets:
+            includePaths:
+              - "docker/images/app2/**"
+        script:
+          - ./scripts/docker-image-push.bash "app2" "$BITBUCKET_COMMIT"
+
+    - step: &terraform-fmt
+        name: terraform fmt
+        condition:
+          changesets:
+            includePaths:
+              - "terraform/**"
+        script:
+          - terraform fmt -check -recursive ./terraform
+    - step: &terraform-module-env0-validate
+        name: validate terraform/modules/env0
+        condition:
+          changesets:
+            includePaths:
+              - "terraform/modules/env0/**"
+        caches:
+          - terraform-module-env0
+        script:
+          - terraform -chdir=./terraform/modules/env0 init -input=false
+          - terraform -chdir=./terraform/modules/env0 validate
+    - step: &terraform-module-env0-plan
+        name: plan terraform/modules/env0
+        condition:
+          changesets:
+            includePaths:
+              - "terraform/modules/env0/**"
+        caches:
+          - terraform-module-env0
+        script:
+          - terraform -chdir=./terraform/modules/env0 init -input=false
+          - terraform -chdir=./terraform/modules/env0 plan -input=false
+    - step: &terraform-module-env0-apply
+        name: apply terraform/modules/env0
+        condition:
+          changesets:
+            includePaths:
+              - "terraform/modules/env0/**"
+        trigger: manual
+        caches:
+          - terraform-module-env0
+        script:
+          - terraform -chdir=./terraform/modules/env0 init -input=false
+          - terraform -chdir=./terraform/modules/env0 apply -input=false -auto-approve
+    - step: &terraform-module-env1-validate
+        name: validate terraform/modules/env1
+        condition:
+          changesets:
+            includePaths:
+              - "terraform/modules/env1/**"
+        caches:
+          - terraform-module-env1
+        script:
+          - terraform -chdir=./terraform/modules/env1 init -input=false
+          - terraform -chdir=./terraform/modules/env1 validate
+    - step: &terraform-module-env1-plan
+        name: plan terraform/modules/env1
+        condition:
+          changesets:
+            includePaths:
+              - "terraform/modules/env1/**"
+        caches:
+          - terraform-module-env1
+        script:
+          - terraform -chdir=./terraform/modules/env1 init -input=false
+          - terraform -chdir=./terraform/modules/env1 plan -input=false
+    - step: &terraform-module-env1-apply
+        name: apply terraform/modules/env1
+        condition:
+          changesets:
+            includePaths:
+              - "terraform/modules/env1/**"
+        trigger: manual
+        caches:
+          - terraform-module-env1
+        script:
+          - terraform -chdir=./terraform/modules/env1 init -input=false
+          - terraform -chdir=./terraform/modules/env1 apply -input=false -auto-approve
+    - step: &terraform-module-env2-validate
+        name: validate terraform/modules/env2
+        condition:
+          changesets:
+            includePaths:
+              - "terraform/modules/env2/**"
+        caches:
+          - terraform-module-env2
+        script:
+          - terraform -chdir=./terraform/modules/env2 init -input=false
+          - terraform -chdir=./terraform/modules/env2 validate
+    - step: &terraform-module-env2-plan
+        name: plan terraform/modules/env2
+        condition:
+          changesets:
+            includePaths:
+              - "terraform/modules/env2/**"
+        caches:
+          - terraform-module-env2
+        script:
+          - terraform -chdir=./terraform/modules/env2 init -input=false
+          - terraform -chdir=./terraform/modules/env2 plan -input=false
+    - step: &terraform-module-env2-apply
+        name: apply terraform/modules/env2
+        condition:
+          changesets:
+            includePaths:
+              - "terraform/modules/env2/**"
+        trigger: manual
+        caches:
+          - terraform-module-env2
+        script:
+          - terraform -chdir=./terraform/modules/env2 init -input=false
+          - terraform -chdir=./terraform/modules/env2 apply -input=false -auto-approve
+    - step: &terraform-module-prod-validate
+        name: validate terraform/modules/prod
+        condition:
+          changesets:
+            includePaths:
+              - "terraform/modules/prod/**"
+        caches:
+          - terraform-module-prod
+        script:
+          - terraform -chdir=./terraform/modules/prod init -input=false
+          - terraform -chdir=./terraform/modules/prod validate
+    - step: &terraform-module-prod-plan
+        name: plan terraform/modules/prod
+        condition:
+          changesets:
+            includePaths:
+              - "terraform/modules/prod/**"
+        caches:
+          - terraform-module-prod
+        script:
+          - terraform -chdir=./terraform/modules/prod init -input=false
+          - terraform -chdir=./terraform/modules/prod plan -input=false
+    - step: &terraform-module-prod-apply
+        name: apply terraform/modules/prod
+        condition:
+          changesets:
+            includePaths:
+              - "terraform/modules/prod/**"
+        trigger: manual
+        caches:
+          - terraform-module-prod
+        script:
+          - terraform -chdir=./terraform/modules/prod init -input=false
+          - terraform -chdir=./terraform/modules/prod apply -input=false -auto-approve
+    - step: &terraform-module-test-validate
+        name: validate terraform/modules/test
+        condition:
+          changesets:
+            includePaths:
+              - "terraform/modules/test/**"
+        caches:
+          - terraform-module-test
+        script:
+          - terraform -chdir=./terraform/modules/test init -input=false
+          - terraform -chdir=./terraform/modules/test validate
+    - step: &terraform-module-test-plan
+        name: plan terraform/modules/test
+        condition:
+          changesets:
+            includePaths:
+              - "terraform/modules/test/**"
+        caches:
+          - terraform-module-test
+        script:
+          - terraform -chdir=./terraform/modules/test init -input=false
+          - terraform -chdir=./terraform/modules/test plan -input=false
+    - step: &terraform-module-test-apply
+        name: apply terraform/modules/test
+        condition:
+          changesets:
+            includePaths:
+              - "terraform/modules/test/**"
+        trigger: manual
+        caches:
+          - terraform-module-test
+        script:
+          - terraform -chdir=./terraform/modules/test init -input=false
+          - terraform -chdir=./terraform/modules/test apply -input=false -auto-approve
+
+pipelines:
+  pull-requests:
+    "**":
+      - parallel:
+          - step: *docker-image-app0-build
+          - step: *docker-image-app1-build
+          - step: *docker-image-app2-build
+      - parallel:
+          - step: *docker-image-app0-test
+          - step: *docker-image-app1-test
+          - step: *docker-image-app2-test
+      - parallel:
+          - step: *terraform-fmt
+          - step: *terraform-module-env0-validate
+          - step: *terraform-module-env1-validate
+          - step: *terraform-module-env2-validate
+          - step: *terraform-module-prod-validate
+          - step: *terraform-module-test-validate
+      - parallel:
+          - step: *terraform-module-env0-plan
+          - step: *terraform-module-env1-plan
+          - step: *terraform-module-env2-plan
+          - step: *terraform-module-prod-plan
+          - step: *terraform-module-test-plan
+  branches:
+    main:
+      - parallel:
+          - step: *docker-image-app0-build
+          - step: *docker-image-app1-build
+          - step: *docker-image-app2-build
+      - parallel:
+          - step: *docker-image-app0-push
+          - step: *docker-image-app1-push
+          - step: *docker-image-app2-push
+      - parallel:
+          - step: *terraform-module-env0-plan
+          - step: *terraform-module-env1-plan
+          - step: *terraform-module-env2-plan
+          - step: *terraform-module-prod-plan
+          - step: *terraform-module-test-plan
+      - parallel:
+          - step: *terraform-module-env0-apply
+          - step: *terraform-module-env1-apply
+          - step: *terraform-module-env2-apply
+          - step: *terraform-module-prod-apply
+          - step: *terraform-module-test-apply

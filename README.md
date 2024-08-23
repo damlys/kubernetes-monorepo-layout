@@ -7,27 +7,22 @@ The Kubernetes Monorepo Layout project aims to create only a structure of direct
 By using this structure, teams can keep things in the right place, making it easier to find and manage infrastructure-related files. This can help improve collaboration and ensure that everyone is on the same page when it comes to infrastructure development and deployment.
 
 ```
-├── docker
-│   └── images
-├── helm
-│   ├── charts
-│   └── releases
-├── kpt
-│   ├── instances
-│   └── packages
-├── kubernetes
-│   ├── kustomize
-│   └── raw
-└── terraform
-    ├── modules
-    └── submodules
+├── docker-images
+├── helm-charts
+├── helm-releases
+├── kpt-instances
+├── kpt-packages
+├── kubernetes-manifests
+├── kustomize
+├── terraform-modules
+└── terraform-submodules
 ```
 
 We encourage contributions and suggestions to help improve the structure and contents of this repository. Whether you are a experienced infrastructure DevOps or a new joiner to the field, we hope this repository will provide a useful starting point for your projects.
 
 ## Infrastructure directories
 
-### `/docker/images`
+### `/docker-images`
 
 This directory is intended to contain the [Dockerfiles](https://docs.docker.com/engine/reference/builder/) and associated resources needed to build container images that are used within your Kubernetes cluster. This directory can include one or more subdirectories, each representing a different image.
 
@@ -35,45 +30,45 @@ In addition to the `Dockerfile`, this directory can also include any resources n
 
 It can also include [container-structure-test.yaml](https://github.com/GoogleContainerTools/container-structure-test) files, which define tests to run on the container image.
 
-### `/helm/charts`
+### `/helm-charts`
 
 This directory is intended to contain the [Helm charts](https://helm.sh/docs/topics/charts/). Each subdirectory should represent a different Helm chart that defines the templates and dependencies needed to install Kubernetes applications.
 
-### `/helm/releases`
+### `/helm-releases`
 
-The `helm/releases` directory is where you store the configuration values required to install instances of Helm charts in your Kubernetes clusters.
+The `helm-releases` directory is where you store the configuration values required to install instances of Helm charts in your Kubernetes clusters.
 
-Each subdirectory within `helm/releases` should contain a `values.yaml` file that defines the values needed to configure a specific instance of the chart in a specific environment.
+Each subdirectory within `helm-releases` should contain a `values.yaml` file that defines the values needed to configure a specific instance of the chart in a specific environment.
 
-### `/kpt/instances`
+### `/kpt-instances`
 
 This directory contains "deployable instances", also known as "variants". Each instance represents a unique configuration of your software that can be deployed to a given environment such as test, staging or production.
 
-### `/kpt/packages`
+### `/kpt-packages`
 
 This directory contains [kpt](https://kpt.dev/) "abstract packages" that are reusable. These packages can be used in different environments and provide a common set of functionality that can be shared across projects.
 
-### `/kubernetes/kustomize`
+### `/kubernetes-manifests`
 
-The `kubernetes/kustomize` directory contains `kustomization.yaml` files and Kubernetes manifests. [Kustomize](https://kubectl.docs.kubernetes.io/references/kustomize/) is a customization engine that allows you to adapt your Kubernetes resources across multiple environments and clusters.
+The `kubernetes-manifests` directory contains raw Kubernetes `.yaml` files that define the desired state of your Kubernetes resources. These files can be used to deploy your Kubernetes applications directly, without using any additional template or customization tools.
 
-### `/kubernetes/raw`
+### `/kustomize`
 
-The `kubernetes/raw` directory contains raw Kubernetes `.yaml` files that define the desired state of your Kubernetes resources. These files can be used to deploy your Kubernetes applications directly, without using any additional template or customization tools.
+The `kustomize` directory contains `kustomization.yaml` files and Kubernetes manifests. [Kustomize](https://kubectl.docs.kubernetes.io/references/kustomize/) is a customization engine that allows you to adapt your Kubernetes resources across multiple environments and clusters.
 
-### `/terraform/modules`
+### `/terraform-modules`
 
 This directory contains Terraform root modules that are used to create resources in your infrastructure. Each subdirectory should represent a different module and contain all the necessary configuration files to define the providers and the resources for that module.
 
 Terraform root modules can be applied to your infrastructure using the Terraform command line interface, and they also maintain state information to keep track of the resources they create. This state information is typically stored in a "backend", such as a cloud storage service, to ensure that it can be accessed and updated by all members of your team.
 
-### `/terraform/submodules`
+### `/terraform-submodules`
 
-The `terraform/submodules` directory contains reusable Terraform child modules that can be used by other Terraform modules in your infrastructure. Each subdirectory should represent a different module.
+The `terraform-submodules` directory contains reusable Terraform child modules that can be used by other Terraform modules in your infrastructure. Each subdirectory should represent a different module.
 
-Unlike the modules in the `terraform/modules` directory, the modules in the `terraform/submodules` directory cannot be applied on their own and do not have state. Instead, they are designed to be used as building blocks, allowing you to define common infrastructure patterns that can be reused across your entire infrastructure.
+Unlike the modules in the `terraform-modules` directory, the modules in the `terraform-submodules` directory cannot be applied on their own and do not have state. Instead, they are designed to be used as building blocks, allowing you to define common infrastructure patterns that can be reused across your entire infrastructure.
 
-By organizing your reusable modules in the `terraform/submodules` directory, you can easily share them across your team and avoid duplicating code in different parts of your infrastructure. You can also make changes to the module in one place and have those changes automatically propagate to all other modules that use it.
+By organizing your reusable modules in the `terraform-submodules` directory, you can easily share them across your team and avoid duplicating code in different parts of your infrastructure. You can also make changes to the module in one place and have those changes automatically propagate to all other modules that use it.
 
 ## Other directories
 

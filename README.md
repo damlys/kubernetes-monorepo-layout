@@ -7,22 +7,26 @@ The Kubernetes Monorepo Layout project aims to create only a structure of direct
 By using this structure, teams can keep things in the right place, making it easier to find and manage infrastructure-related files. This can help improve collaboration and ensure that everyone is on the same page when it comes to infrastructure development and deployment.
 
 ```
-├── docker-images
-├── helm-charts
-├── helm-releases
-├── kpt-instances
-├── kpt-packages
-├── kubernetes-manifests
-├── kustomize
-├── terraform-modules
-└── terraform-submodules
+scopes
+├── core
+│   ├── docker-images
+│   ├── helm-charts
+│   ├── helm-releases
+│   ├── kpt-instances
+│   ├── kpt-packages
+│   ├── kubernetes-manifests
+│   ├── kustomize
+│   ├── terraform-modules
+│   └── terraform-submodules
+└── apps
+    └── ...
 ```
 
 We encourage contributions and suggestions to help improve the structure and contents of this repository. Whether you are a experienced infrastructure DevOps or a new joiner to the field, we hope this repository will provide a useful starting point for your projects.
 
 ## Infrastructure directories
 
-### `/docker-images`
+### `/scopes/<scope_name>/docker-images/<project_name>`
 
 This directory is intended to contain the [Dockerfiles](https://docs.docker.com/engine/reference/builder/) and associated resources needed to build container images that are used within your Kubernetes cluster. This directory can include one or more subdirectories, each representing a different image.
 
@@ -30,39 +34,39 @@ In addition to the `Dockerfile`, this directory can also include any resources n
 
 It can also include [container-structure-test.yaml](https://github.com/GoogleContainerTools/container-structure-test) files, which define tests to run on the container image.
 
-### `/helm-charts`
+### `/scopes/<scope_name>/helm-charts/<project_name>`
 
 This directory is intended to contain the [Helm charts](https://helm.sh/docs/topics/charts/). Each subdirectory should represent a different Helm chart that defines the templates and dependencies needed to install Kubernetes applications.
 
-### `/helm-releases`
+### `/scopes/<scope_name>/helm-releases/<project_name>`
 
 The `helm-releases` directory is where you store the configuration values required to install instances of Helm charts in your Kubernetes clusters.
 
 Each subdirectory within `helm-releases` should contain a `values.yaml` file that defines the values needed to configure a specific instance of the chart in a specific environment.
 
-### `/kpt-instances`
+### `/scopes/<scope_name>/kpt-instances/<project_name>`
 
 This directory contains "deployable instances", also known as "variants". Each instance represents a unique configuration of your software that can be deployed to a given environment such as test, staging or production.
 
-### `/kpt-packages`
+### `/scopes/<scope_name>/kpt-packages/<project_name>`
 
 This directory contains [kpt](https://kpt.dev/) "abstract packages" that are reusable. These packages can be used in different environments and provide a common set of functionality that can be shared across projects.
 
-### `/kubernetes-manifests`
+### `/scopes/<scope_name>/kubernetes-manifests/<project_name>`
 
 The `kubernetes-manifests` directory contains raw Kubernetes `.yaml` files that define the desired state of your Kubernetes resources. These files can be used to deploy your Kubernetes applications directly, without using any additional template or customization tools.
 
-### `/kustomize`
+### `/scopes/<scope_name>/kustomize/<project_name>`
 
 The `kustomize` directory contains `kustomization.yaml` files and Kubernetes manifests. [Kustomize](https://kubectl.docs.kubernetes.io/references/kustomize/) is a customization engine that allows you to adapt your Kubernetes resources across multiple environments and clusters.
 
-### `/terraform-modules`
+### `/scopes/<scope_name>/terraform-modules/<project_name>`
 
 This directory contains Terraform root modules that are used to create resources in your infrastructure. Each subdirectory should represent a different module and contain all the necessary configuration files to define the providers and the resources for that module.
 
 Terraform root modules can be applied to your infrastructure using the Terraform command line interface, and they also maintain state information to keep track of the resources they create. This state information is typically stored in a "backend", such as a cloud storage service, to ensure that it can be accessed and updated by all members of your team.
 
-### `/terraform-submodules`
+### `/scopes/<scope_name>/terraform-submodules/<project_name>`
 
 The `terraform-submodules` directory contains reusable Terraform child modules that can be used by other Terraform modules in your infrastructure. Each subdirectory should represent a different module.
 
@@ -91,7 +95,7 @@ This directory should follow the structure specified in the [golang-standards/pr
 
 The `scripts` directory contains shell scripts that automate various procedures and tasks. These scripts can help to streamline workflows and simplify complex processes. They can be used to manage infrastructure resources, configure services, deploy applications, and perform other operations.
 
-By storing these scripts in a central location, you can ensure that they are easily accessible to all team members, and that they can be reused across different scopes and environments.
+By storing these scripts in a central location, you can ensure that they are easily accessible to all team members, and that they can be reused across different scopes and projects.
 
 ### `/third_party`
 
